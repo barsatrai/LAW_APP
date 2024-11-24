@@ -1,17 +1,54 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { AntDesign, FontAwesome } from '@expo/vector-icons';
-import Colors from '../Shared/Colors';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import Colors from "../Shared/Colors";
 
 export default function Login({ navigation }) {
-  
-    const handleLoginPress = () => {
-      navigation.navigate('Home');
-    };
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleSignUpPress = () => {
-      navigation.navigate('Signup');
-    };
+  // Function to handle login via backend
+  const handleLogin = async () => {
+    try {
+      const response = await fetch("http://113.199.250.153:5000/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Success", "Login successful");
+        navigation.navigate("Home"); // Navigate to Home on successful login
+      } else {
+        Alert.alert("Error", data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "Failed to connect to backend");
+    }
+  };
+
+  const handleLoginPress = () => {
+    handleLogin(); // Call login function when login button is pressed
+  };
+
+  const handleSignUpPress = () => {
+    navigation.navigate("Signup");
+  };
 
   return (
     <View style={styles.mainContainer}>
@@ -24,6 +61,8 @@ export default function Login({ navigation }) {
             style={styles.input}
             placeholder="Type your username"
             placeholderTextColor="#888"
+            value={username} // Controlled input for username
+            onChangeText={setUsername}
           />
         </View>
         <Text style={styles.Password}>Password</Text>
@@ -34,6 +73,8 @@ export default function Login({ navigation }) {
             placeholder="Type your password"
             placeholderTextColor="#888"
             secureTextEntry={true}
+            value={password} // Controlled input for password
+            onChangeText={setPassword}
           />
         </View>
         <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
@@ -67,17 +108,17 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: "#f5f5f5",
   },
   container: {
     paddingTop: 40,
     marginTop: -30,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     paddingHorizontal: 20,
     paddingBottom: 30,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
@@ -85,31 +126,31 @@ const styles = StyleSheet.create({
   },
   LoginText: {
     fontSize: 35,
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
     paddingTop: 50,
     color: Colors.black,
   },
   UserName: {
     fontSize: 20,
-    textAlign: 'left',
+    textAlign: "left",
     paddingTop: 50,
     color: Colors.black,
     paddingBottom: 8,
   },
   Password: {
     fontSize: 20,
-    textAlign: 'left',
+    textAlign: "left",
     paddingTop: 20,
     color: Colors.black,
     paddingBottom: 8,
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     paddingBottom: 8,
   },
   icon: {
@@ -118,29 +159,29 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 18,
-    color: '#000',
+    color: "#000",
   },
   forgotSignUpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 20,
   },
   forgotText: {
-    color: '#3498db',
+    color: "#3498db",
   },
   signUpText: {
-    color: '#3498db',
+    color: "#3498db",
   },
   button: {
     backgroundColor: Colors.primary,
     padding: 15,
     marginVertical: 10,
     marginHorizontal: 8,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
@@ -149,17 +190,17 @@ const styles = StyleSheet.create({
   buttonText: {
     color: Colors.white,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   orSignUpUsingText: {
     fontSize: 16,
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   socialIcons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '60%',
-    alignSelf: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "60%",
+    alignSelf: "center",
   },
 });
