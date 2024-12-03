@@ -30,7 +30,7 @@ export default function Login({ navigation }) {
 
       const data = await response.json();
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.success === true) {
         Alert.alert("Success", "Login successful");
         navigation.navigate("Home"); // Navigate to Home on successful login
       } else {
