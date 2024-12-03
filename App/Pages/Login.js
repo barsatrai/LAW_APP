@@ -17,7 +17,7 @@ export default function Login({ navigation }) {
   // Function to handle login via backend
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://113.199.250.153:5000/login", {
+      const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +30,7 @@ export default function Login({ navigation }) {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.status === 200) {
         Alert.alert("Success", "Login successful");
         navigation.navigate("Home"); // Navigate to Home on successful login
       } else {
